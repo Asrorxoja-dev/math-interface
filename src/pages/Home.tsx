@@ -9,6 +9,8 @@ import { GameState } from "../types";
 import { mathQuestions } from "../data/questions";
 import { Calculator as Kalkulator } from "lucide-react";
 import { X } from "lucide-react";
+import { Toaster } from "sonner";
+
 const initialGameState: GameState = {
   lives: 3,
   currentStep: 0,
@@ -17,7 +19,8 @@ const initialGameState: GameState = {
   isVideoRequired: false,
   hasViewedSolution: false,
   roundStatus: "default",
-  actionTaken: false, 
+  actionTaken: false,
+  viewedSolutionSteps: [],
 };
 
 function Home() {
@@ -25,6 +28,7 @@ function Home() {
   const [input, setInput] = useState("");
   const [showSolution, setShowSolution] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
 
   const currentQuestion = mathQuestions[gameState.currentStep];
 
@@ -46,8 +50,10 @@ function Home() {
 
     if (userAnswer === currentQuestion.correctAnswer) {
       handleCorrectAnswer();
+      setIsAnswerCorrect(true);
     } else {
       handleWrongAnswer();
+      setIsAnswerCorrect(false);
     }
   };
 
@@ -64,7 +70,7 @@ function Home() {
       roundStatus: "default",
       isVideoRequired: false,
       hasViewedSolution: false,
-      actionTaken: false, 
+      actionTaken: false,
     }));
   };
 
@@ -84,52 +90,32 @@ function Home() {
   };
 
   const handleViewSolution = () => {
-    if (!gameState.actionTaken) { // Prevent multiple clicks
+    if (!gameState.actionTaken) {
       setShowSolution(true);
       setGameState((prev) => ({
         ...prev,
         lives: prev.lives - 1,
         hasViewedSolution: true,
-        roundStatus: "brown",
-        actionTaken: true, // Mark as used
+        roundStatus: "red",
+        actionTaken: true,
+        viewedSolutionSteps: [...prev.viewedSolutionSteps, prev.currentStep],
       }));
     }
   };
-  
+
   const handleVideoExplanation = () => {
-    if (!gameState.actionTaken) { // Prevent multiple clicks
+    if (!gameState.actionTaken) {
       if (gameState.lives > 0) {
         setGameState((prev) => ({
           ...prev,
           lives: prev.lives - 1,
           roundStatus: "yellow",
           hasViewedSolution: true,
-          actionTaken: true, // Mark as used
+          actionTaken: true,
         }));
       }
     }
   };
-  
-  if (gameState.lives === 0) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl shadow-xl p-8 text-center">
-          <h1 className="text-2xl font-bold mb-4">Game Over! 😢</h1>
-          <p className="text-gray-600">
-            You've run out of lives. Better luck next time!
-          </p>
-          <button
-            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-            onClick={() => {
-              setGameState(initialGameState);
-            }}
-          >
-            Restart
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   if (gameState.currentStep >= mathQuestions.length) {
     return (
@@ -150,76 +136,84 @@ function Home() {
     ) as HTMLDialogElement | null;
     modal?.showModal();
   };
-  
+
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <button className="btn " onClick={openModal}>
-        <p className="bg-black text-white px-3 py-3 rounded-xl">Modal</p>
-      </button>
-      <dialog id="my_modal_3" className="modal rounded-xl ">
-        <div className="modal-box w-full max-w-5xl mt-5">
-          <form method="dialog">
-            <button className="btn btn-sm  btn-circle btn-ghost absolute right-2 top-1 ">
-              <X />
-            </button>
-          </form>
-          <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl shadow-xl p-14 w-full max-w-2xl relative">
-              <Hearts lives={gameState.lives} />
+    <div className="">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-10">
+        <button className="btn " onClick={openModal}>
+          <p className="bg-black text-white px-3 py-3 rounded-xl">Modal</p>
+        </button>
+        <dialog id="my_modal_3" className="modal rounded-xl w-full max-w-5xl">
+          <div className="modal-box  mt-5">
+            <Toaster position="top-center" />
+            <form method="dialog">
+              <button className="btn btn-sm  btn-circle btn-ghost absolute right-2 top-1 ">
+                <X />
+              </button>
+            </form>
+            <div className=" bg-gray-100 flex items-center justify-center p-4">
+              <div className="bg-white rounded-xl shadow-xl p-14 w-full max-w-2xl relative">
+                <Hearts lives={gameState.lives} />
 
-              <QuestionDisplay
-                question={currentQuestion}
-                roundStatus={gameState.roundStatus}
-                onOptionSelect={handleOptionSelect}
-                selectedOption={selectedOption}
-              />
+                <QuestionDisplay
+                  question={currentQuestion}
+                  roundStatus={gameState.roundStatus}
+                  onOptionSelect={handleOptionSelect}
+                  selectedOption={selectedOption}
+                />
 
-              {currentQuestion.type === "completion" && (
-                <div className="mt-6">
-                  <div className="bg-gray-50 p-4 rounded-lg flex justify-between px-16   items-center mb-4">
-                    <p className="text-lg font-medium text-gray-700">
-                      Sizning javobingiz:
-                    </p>
-                    <input
-                      type="number"
-                      className="border-2 border-gray-300 rounded-lg p-2 max-w-[70px]"
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                    ></input>
-                    <Kalkulator className="text-gray-700" size={35} />
+                {currentQuestion.type === "completion" && (
+                  <div className="mt-6">
+                    <div className="bg-gray-50 p-4 rounded-lg flex justify-center  items-center mb-4">
+                      <p className="text-lg font-medium text-gray-700">
+                        Sizning javobingiz:
+                      </p>
+                      <input
+                        type="number"
+                        className="border-2 border-gray-300 rounded-lg p-2 mx-5 max-w-[70px]"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                      ></input>
+                      <Kalkulator className="text-gray-700" size={35} />
+                    </div>
+                    <Calculator onInput={handleInput} />
                   </div>
-                  <Calculator onInput={handleInput} />
-                </div>
-              )}
+                )}
 
-<GameControls
-  onCheck={handleCheck}
-  onViewSolution={handleViewSolution}
-  onVideoExplanation={handleVideoExplanation} 
-  isCheckDisabled={
-    gameState.isVideoRequired && !gameState.hasViewedSolution
-  }
-  showNext={showSolution}
-  videoRequired={gameState.isVideoRequired}
-  videoUrl={currentQuestion.videoUrl || ''}
-  actionTaken={gameState.actionTaken}
-/>
+                <GameControls
+                  onCheck={handleCheck}
+                  onViewSolution={handleViewSolution}
+                  onVideoExplanation={handleVideoExplanation}
+                  isCheckDisabled={
+                    (gameState.isVideoRequired &&
+                      !gameState.hasViewedSolution) ||
+                    (currentQuestion.type === "completion" &&
+                      input.trim() === "")
+                  }
+                  showNext={showSolution}
+                  videoRequired={gameState.isVideoRequired}
+                  videoUrl={currentQuestion.videoUrl || ""}
+                  actionTaken={gameState.actionTaken}
+                  isAnswerCorrect={isAnswerCorrect}
+                />
 
+                <SolutionDisplay
+                  solution={currentQuestion.solution}
+                  isVisible={showSolution}
+                />
 
-              <SolutionDisplay
-                solution={currentQuestion.solution}
-                isVisible={showSolution}
-              />
-
-              <StepTracker
-                currentStep={gameState.currentStep}
-                totalSteps={mathQuestions.length + gameState.strafQuestions}
-              />
+                <StepTracker
+                  currentStep={gameState.currentStep}
+                  totalSteps={mathQuestions.length + gameState.strafQuestions}
+                  roundStatus={gameState.roundStatus}
+                  viewedSolutionSteps={gameState.viewedSolutionSteps}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </dialog>
+        </dialog>
+      </div>
     </div>
   );
-
-}export default Home;
+}
+export default Home;

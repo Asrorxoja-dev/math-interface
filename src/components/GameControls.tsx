@@ -1,6 +1,7 @@
 import { Play } from "lucide-react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
+
+
 
 interface GameControlsProps {
   onCheck: () => void;
@@ -34,14 +35,27 @@ export function GameControls({
   };
 
   const handleCheck = () => {
-    onCheck(); // Asosiy tekshirish funksiyasi chaqiriladi.
+    if (isCheckDisabled) {
+      toast.error("Siz boshqa savolga o'tishingiz mumkin emas!");
+      return;
+    }
+    onCheck();
     if (isAnswerCorrect) {
-      toast.success("Javob to'g'ri! Ajoyib ishladingiz!"); // Agar javob to'g'ri bo'lsa.
+      toast.success("To'g'ri javob!", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+        },
+      });
     } else {
-      toast.error("Javob noto'g'ri! Iltimos, qayta urinib ko'ring."); // Agar noto'g'ri bo'lsa.
+      toast.error("Noto'g'ri javob!", {
+        style: {
+          backgroundColor: "red",
+          color: "white",
+        },
+      });
     }
   };
-
   return (
     <div className="flex justify-between items-center mt-5">
       <button

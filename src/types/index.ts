@@ -21,6 +21,7 @@ export interface GameState {
   isVideoRequired: boolean;
   hasViewedSolution: boolean;
   actionTaken: boolean;
+  viewedSolutionSteps: number[];
  
   roundStatus: 'default' | 'red' | 'brown' | 'yellow';
 }
