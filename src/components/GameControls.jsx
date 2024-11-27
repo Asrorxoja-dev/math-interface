@@ -15,7 +15,6 @@ export function GameControls({
 }) {
   const [showVideo, setShowVideo] = useState(false); // State to control video display
 
-  // Reset video display whenever the question changes
   useEffect(() => {
     setShowVideo(false);
   }, [currentQuestionId]);
@@ -34,22 +33,8 @@ export function GameControls({
       toast.error("Siz boshqa savolga o'tishingiz mumkin emas!");
       return;
     }
+
     onCheck();
-    if (isAnswerCorrect) {
-      toast.success("To'g'ri javob!", {
-        style: {
-          backgroundColor: "green",
-          color: "white",
-        },
-      });
-    } else {
-      toast.error("Noto'g'ri javob!", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
-    }
   };
 
   return (
@@ -86,10 +71,6 @@ export function GameControls({
           </button>
         </div>
       </div>
-
-    
     </div>
   );
 }
-
-

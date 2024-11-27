@@ -9,7 +9,7 @@ import { mathQuestions } from "../data/questions";
 import { Calculator as Kalkulator } from "lucide-react";
 import { X } from "lucide-react";
 import { Toaster } from "sonner";
-
+import { toast } from "sonner";
 const initialGameState = {
   lives: 3,
   currentStep: 0,
@@ -26,16 +26,15 @@ function Home() {
   const [gameState, setGameState] = useState(initialGameState);
   const [input, setInput] = useState("");
   const [showSolution, setShowSolution] = useState(false);
-  const [showVideo, setShowVideo] = useState(false); // New state for video display
+  const [showVideo, setShowVideo] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
 
   const currentQuestion = mathQuestions[gameState.currentStep];
 
-  // Reset video and solution states when moving to the next question
   useEffect(() => {
-    setShowVideo(false);  // Reset video display on next question
-    setShowSolution(false);  // Reset solution display on next question
+    setShowVideo(false);
+    setShowSolution(false);
   }, [gameState.currentStep]);
 
   const handleInput = (value) => {
@@ -57,9 +56,21 @@ function Home() {
     if (userAnswer === currentQuestion.correctAnswer) {
       handleCorrectAnswer();
       setIsAnswerCorrect(true);
+      toast.success("To'g'ri javob!", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+        },
+      });
     } else {
       handleWrongAnswer();
       setIsAnswerCorrect(false);
+      toast.error("Noto'g'ri javob!", {
+        style: {
+          backgroundColor: "red",
+          color: "white",
+        },
+      });
     }
   };
 
@@ -93,6 +104,8 @@ function Home() {
       }));
     }
   };
+
+ 
 
   const handleViewSolution = () => {
     if (!gameState.actionTaken) {
@@ -225,6 +238,7 @@ function Home() {
                   totalSteps={mathQuestions.length + gameState.strafQuestions}
                   roundStatus={gameState.roundStatus}
                   viewedSolutionSteps={gameState.viewedSolutionSteps}
+                  lives={gameState.lives}
                 />
               </div>
             </div>
