@@ -43,7 +43,7 @@ export function GameControls({
         <button
           onClick={handleVideoExplanation}
           disabled={actionTaken}
-          className="flex items-center px-4 py-2 text-sm mr-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+          className="flex items-center px-4 py-2 text-sm mr-4 bg-amber-500  hover:bg-amber-600 text-white rounded-lg transition-colors"
         >
           <Play size={15} className="mr-2" />
           Video tushuntirish
@@ -53,7 +53,7 @@ export function GameControls({
           <button
             onClick={onViewSolution}
             disabled={actionTaken}
-            className="px-4 py-2 text-sm bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
+            className="px-4 py-2 text-sm  bg-red-600  hover:bg-red-700 text-white rounded-lg transition-colors"
           >
             Yechimni ko'rish
           </button>

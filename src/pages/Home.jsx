@@ -29,6 +29,8 @@ function Home() {
   const [showVideo, setShowVideo] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
+  
+  const [videoStep, setVideoStep] = useState(null);
 
   const currentQuestion = mathQuestions[gameState.currentStep];
 
@@ -78,15 +80,22 @@ function Home() {
     setInput("");
     setSelectedOption(null);
 
-    setGameState((prev) => ({
-      ...prev,
-      lives: Math.min(prev.lives + 1, 3),
-      currentStep: prev.currentStep + 1,
-      mistakes: 0,
-      roundStatus: "default",
-      isVideoRequired: false,
-      hasViewedSolution: false,
-      actionTaken: false,
+    let heartsToAdd = 1;
+
+
+  if (gameState.hasViewedSolution || gameState.actionTaken) {
+    heartsToAdd = 0;
+  }
+
+  setGameState((prev) => ({
+    ...prev,
+    lives: Math.min(prev.lives + heartsToAdd, 3),
+    currentStep: prev.currentStep + 1,
+    mistakes: 0,
+    roundStatus: "default",
+    isVideoRequired: false,
+    hasViewedSolution: false,
+    actionTaken: false,
     }));
   };
 
@@ -105,8 +114,6 @@ function Home() {
     }
   };
 
- 
-
   const handleViewSolution = () => {
     if (!gameState.actionTaken) {
       setShowSolution(true);
@@ -124,17 +131,19 @@ function Home() {
   const handleVideoExplanation = () => {
     if (!gameState.actionTaken) {
       setShowVideo(true); // Show video on button click
+      setVideoStep(gameState.currentStep); // Track the current step where video is viewed
       if (gameState.lives > 0) {
         setGameState((prev) => ({
           ...prev,
           lives: prev.lives - 1,
-          roundStatus: "yellow",
+          roundStatus: "yellow", // Change round status to yellow after video
           hasViewedSolution: true,
           actionTaken: true,
         }));
       }
     }
   };
+
 
   if (gameState.currentStep >= mathQuestions.length) {
     return (
@@ -239,6 +248,7 @@ function Home() {
                   roundStatus={gameState.roundStatus}
                   viewedSolutionSteps={gameState.viewedSolutionSteps}
                   lives={gameState.lives}
+                  videoStep={videoStep}
                 />
               </div>
             </div>
