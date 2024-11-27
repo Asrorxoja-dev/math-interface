@@ -1,5 +1,3 @@
-
-
 export const mathQuestions = [
   {
     id: "1",
@@ -8,7 +6,7 @@ export const mathQuestions = [
     question: "2x + 5 = 13",
     solution: "x = 4\n2x = 13 - 5\n2x = 8\nx = 4",
     correctAnswer: "4",
-    videoUrl: "https://youtube.com/embed/example1",
+    videoUrl:"https://youtube.com/embed/9A9UX__ENgs",
   },
   {
     id: "2",
@@ -18,7 +16,7 @@ export const mathQuestions = [
     solution: "√16 + 3 = 4 + 3 = 7",
     options: ["5", "6", "7", "8"],
     correctAnswer: "7",
-    videoUrl: "https://youtube.com/embed/example2",
+    videoUrl: "https://youtube.com/embed/9A9UX__ENgs",
   },
   {
     id: "3",
@@ -27,7 +25,7 @@ export const mathQuestions = [
     question: "3y - 6 = 15",
     solution: "3y = 21\ny = 7",
     correctAnswer: "7",
-    videoUrl: "https://youtube.com/embed/example3",
+    videoUrl: "https://youtube.com/embed/9A9UX__ENgs",
   },
   {
     id: "4",
@@ -37,7 +35,7 @@ export const mathQuestions = [
     solution: "5x = 25\nx = 25 ÷ 5\nx = 5",
     options: ["3", "4", "5", "6"],
     correctAnswer: "5",
-    videoUrl: "https://youtube.com/embed/example4",
+    videoUrl: "https://youtube.com/embed/9A9UX__ENgs",
   },
   {
     id: "5",
@@ -46,7 +44,7 @@ export const mathQuestions = [
     question: "Solve: x/4 = 7",
     solution: "x = 7 × 4\nx = 28",
     correctAnswer: "28",
-    videoUrl: "https://youtube.com/embed/example5",
+    videoUrl: "https://youtube.com/embed/9A9UX__ENgs",
   },
   {
     id: "6",
@@ -56,7 +54,7 @@ export const mathQuestions = [
     solution: "12 ÷ 4 = 3\n3 + 2 = 5",
     options: ["4", "5", "6", "7"],
     correctAnswer: "5",
-    videoUrl: "https://youtube.com/embed/example6",
+    videoUrl: "https://youtube.com/embed/9A9UX__ENgs",
   },
   {
     id: "7",
@@ -65,7 +63,7 @@ export const mathQuestions = [
     question: "If 2x = 14, find x.",
     solution: "2x = 14\nx = 14 ÷ 2\nx = 7",
     correctAnswer: "7",
-    videoUrl: "https://youtube.com/embed/example7",
+    videoUrl: "https://youtube.com/embed/9A9UX__ENgs",
   },
   {
     id: "8",
@@ -75,7 +73,7 @@ export const mathQuestions = [
     solution: "√36 = 6",
     options: ["5", "6", "7", "8"],
     correctAnswer: "6",
-    videoUrl: "https://youtube.com/embed/example8",
+    videoUrl: "https://youtube.com/embed/9A9UX__ENgs",
   },
   {
     id: "9",
@@ -84,7 +82,7 @@ export const mathQuestions = [
     question: "Find the value of 3x + 1 = 10.",
     solution: "3x + 1 = 10\n3x = 9\nx = 3",
     correctAnswer: "3",
-    videoUrl: "https://youtube.com/embed/example9",
+    videoUrl: "https://youtube.com/embed/9A9UX__ENgs",
   },
   {
     id: "10",
@@ -94,6 +92,6 @@ export const mathQuestions = [
     solution: "8 × 2 = 16\n16 - 4 = 12",
     options: ["10", "12", "14", "16"],
     correctAnswer: "12",
-    videoUrl: "https://youtube.com/embed/example10",
+    videoUrl: "https://youtube.com/embed/9A9UX__ENgs",
   },
 ];

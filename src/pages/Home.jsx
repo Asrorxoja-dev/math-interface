@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calculator } from "../components/Calculator";
 import { StepTracker } from "../components/StepTracker";
 import { Hearts } from "../components/Hearts";
@@ -26,10 +26,17 @@ function Home() {
   const [gameState, setGameState] = useState(initialGameState);
   const [input, setInput] = useState("");
   const [showSolution, setShowSolution] = useState(false);
+  const [showVideo, setShowVideo] = useState(false); // New state for video display
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
 
   const currentQuestion = mathQuestions[gameState.currentStep];
+
+  // Reset video and solution states when moving to the next question
+  useEffect(() => {
+    setShowVideo(false);  // Reset video display on next question
+    setShowSolution(false);  // Reset solution display on next question
+  }, [gameState.currentStep]);
 
   const handleInput = (value) => {
     if (value === "=") {
@@ -59,7 +66,6 @@ function Home() {
   const handleCorrectAnswer = () => {
     setInput("");
     setSelectedOption(null);
-    setShowSolution(false);
 
     setGameState((prev) => ({
       ...prev,
@@ -104,6 +110,7 @@ function Home() {
 
   const handleVideoExplanation = () => {
     if (!gameState.actionTaken) {
+      setShowVideo(true); // Show video on button click
       if (gameState.lives > 0) {
         setGameState((prev) => ({
           ...prev,
@@ -141,10 +148,10 @@ function Home() {
           <p className="bg-black text-white px-3 py-3 rounded-xl">Modal</p>
         </button>
         <dialog id="my_modal_3" className="modal rounded-xl w-full max-w-5xl">
-          <div className="modal-box  mt-5">
+          <div className="modal-box mt-5">
             <Toaster position="top-center" />
             <form method="dialog">
-              <button className="btn btn-sm  btn-circle btn-ghost absolute right-2 top-1 ">
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-1 ">
                 <X />
               </button>
             </form>
@@ -193,6 +200,20 @@ function Home() {
                   actionTaken={gameState.actionTaken}
                   isAnswerCorrect={isAnswerCorrect}
                 />
+
+                {showVideo && currentQuestion.videoUrl && (
+                  <div className="mt-6 p-6 bg-gray-50 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Video tushuntirish:
+                    </h3>
+                    <iframe
+                      src={currentQuestion.videoUrl}
+                      title="Video Explanation"
+                      className="w-full h-64 rounded-lg border"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                )}
 
                 <SolutionDisplay
                   solution={currentQuestion.solution}
