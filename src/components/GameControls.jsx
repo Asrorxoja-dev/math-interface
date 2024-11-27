@@ -3,17 +3,6 @@ import { toast } from "sonner";
 
 
 
-interface GameControlsProps {
-  onCheck: () => void;
-  onViewSolution: () => void;
-  onVideoExplanation: () => void;
-  isCheckDisabled: boolean;
-  showNext: boolean;
-  videoRequired: boolean;
-  videoUrl: string;
-  actionTaken: boolean;
-  isAnswerCorrect?: boolean;
-}
 
 export function GameControls({
   onCheck,
@@ -24,7 +13,8 @@ export function GameControls({
   videoUrl,
   actionTaken,
   isAnswerCorrect,
-}: GameControlsProps) {
+}) {
+  
   const handleVideoExplanation = () => {
     if (!actionTaken && videoUrl) {
       window.open(videoUrl, "_blank");

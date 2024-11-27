@@ -1,9 +1,6 @@
-interface SolutionDisplayProps {
-  solution: string;
-  isVisible: boolean;
-}
 
-export function SolutionDisplay({ solution, isVisible }: SolutionDisplayProps) {
+
+export function SolutionDisplay({ solution, isVisible }) {
   if (!isVisible) return null;
 
   return (

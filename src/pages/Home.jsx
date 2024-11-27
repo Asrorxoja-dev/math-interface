@@ -5,13 +5,12 @@ import { Hearts } from "../components/Hearts";
 import { QuestionDisplay } from "../components/QuestionDisplay";
 import { GameControls } from "../components/GameControls";
 import { SolutionDisplay } from "../components/SolutionDisplay";
-import { GameState } from "../types";
 import { mathQuestions } from "../data/questions";
 import { Calculator as Kalkulator } from "lucide-react";
 import { X } from "lucide-react";
 import { Toaster } from "sonner";
 
-const initialGameState: GameState = {
+const initialGameState = {
   lives: 3,
   currentStep: 0,
   mistakes: 0,
@@ -24,15 +23,15 @@ const initialGameState: GameState = {
 };
 
 function Home() {
-  const [gameState, setGameState] = useState<GameState>(initialGameState);
+  const [gameState, setGameState] = useState(initialGameState);
   const [input, setInput] = useState("");
   const [showSolution, setShowSolution] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
 
   const currentQuestion = mathQuestions[gameState.currentStep];
 
-  const handleInput = (value: string) => {
+  const handleInput = (value) => {
     if (value === "=") {
       handleCheck();
     } else {
@@ -40,7 +39,7 @@ function Home() {
     }
   };
 
-  const handleOptionSelect = (option: string) => {
+  const handleOptionSelect = (option) => {
     setSelectedOption(option);
   };
 
@@ -131,9 +130,7 @@ function Home() {
   }
 
   const openModal = () => {
-    const modal = document.getElementById(
-      "my_modal_3"
-    ) as HTMLDialogElement | null;
+    const modal = document.getElementById("my_modal_3");
     modal?.showModal();
   };
 
@@ -151,7 +148,7 @@ function Home() {
                 <X />
               </button>
             </form>
-            <div className=" bg-gray-100 flex items-center justify-center p-4">
+            <div className="bg-gray-100 flex items-center justify-center p-4">
               <div className="bg-white rounded-xl shadow-xl p-14 w-full max-w-2xl relative">
                 <Hearts lives={gameState.lives} />
 
@@ -164,7 +161,7 @@ function Home() {
 
                 {currentQuestion.type === "completion" && (
                   <div className="mt-6">
-                    <div className="bg-gray-50 p-4 rounded-lg flex justify-center  items-center mb-4">
+                    <div className="bg-gray-50 p-4 rounded-lg flex justify-center items-center mb-4">
                       <p className="text-lg font-medium text-gray-700">
                         Sizning javobingiz:
                       </p>
@@ -216,4 +213,5 @@ function Home() {
     </div>
   );
 }
+
 export default Home;

@@ -1,11 +1,9 @@
 
 import { Heart } from 'lucide-react';
 
-interface HeartsProps {
-  lives: number;
-}
 
-export function Hearts({ lives }: HeartsProps) {
+
+export function Hearts({ lives }) {
   return (
     <div className="flex space-x-1 absolute top-4 right-4">
       {Array.from({ length: 3 }).map((_, index) => (

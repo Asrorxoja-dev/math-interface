@@ -1,6 +1,6 @@
-import { Question } from "../types";
 
-export const mathQuestions: Question[] = [
+
+export const mathQuestions = [
   {
     id: "1",
     type: "completion",

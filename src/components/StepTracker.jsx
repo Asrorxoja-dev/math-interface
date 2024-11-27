@@ -3,11 +3,6 @@ export function StepTracker({
   totalSteps,
   roundStatus,
   viewedSolutionSteps,
-}: {
-  currentStep: number;
-  totalSteps: number;
-  roundStatus: string;
-  viewedSolutionSteps: number[];
 }) {
   return (
     <div className="flex justify-center mt-4">

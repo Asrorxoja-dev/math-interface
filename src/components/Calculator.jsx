@@ -1,10 +1,8 @@
 import { Square, Divide, Plus, Minus, X } from "lucide-react";
 
-interface CalculatorProps {
-  onInput: (value: string) => void;
-}
 
-export function Calculator({ onInput }: CalculatorProps) {
+
+export function Calculator({ onInput }) {
   const buttons = [
     ["√", "÷", "7", "8", "9", "<>"],
     ["×", "-", "4", "5", "6", "+"],
@@ -12,11 +10,11 @@ export function Calculator({ onInput }: CalculatorProps) {
     ["(", ")", ".", "0", ",", ";"],
   ];
 
-  const handleClick = (value: string) => {
+  const handleClick = (value) => {
     onInput(value);
   };
 
-  const getIcon = (value: string) => {
+  const getIcon = (value) => {
     switch (value) {
       case "×":
         return <X size={20} />;
