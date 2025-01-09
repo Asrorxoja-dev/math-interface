@@ -1,17 +1,15 @@
-
+import "../styles/_hearts.scss"
 import { Heart } from 'lucide-react';
 
 
 
 export function Hearts({ lives }) {
   return (
-    <div className="flex space-x-1 absolute top-4 right-4">
+    <div className="hearts">
       {Array.from({ length: 3 }).map((_, index) => (
         <Heart
           key={index}
-          className={`w-5 h-5 ${
-            index < lives ? 'fill-red-500 text-red-500' : 'text-gray-300'
-          }`}
+          className={`heart ${index < lives ? 'heart--filled' : 'heart--empty'}`}
         />
       ))}
     </div>

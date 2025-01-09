@@ -1,6 +1,5 @@
+import "../styles/_calculator.scss";
 import { Square, Divide, Plus, Minus, X } from "lucide-react";
-
-
 
 export function Calculator({ onInput }) {
   const buttons = [
@@ -32,16 +31,14 @@ export function Calculator({ onInput }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-md">
-      <div className="grid grid-cols-6 gap-2">
+    <div className="calculator">
+      <div className="grid">
         {buttons.map((row, i) =>
           row.map((btn, j) => (
             <button
               key={`${i}-${j}`}
               onClick={() => handleClick(btn)}
-              className={`${
-                btn === "=" ? "col-span-1" : ""
-              } h-12  flex items-center justify-center rounded-lg bg-gray-200 hover:bg-gray-400 transition-colors text-gray-700 font-bold text-xl`}
+              className={btn === "=" ? "equals" : ""}
             >
               {getIcon(btn)}
             </button>

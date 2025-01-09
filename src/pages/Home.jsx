@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { X, Calculator as Kalkulator } from "lucide-react";
+import { Toaster, toast } from "sonner";
 import { Calculator } from "../components/Calculator";
 import { StepTracker } from "../components/StepTracker";
 import { Hearts } from "../components/Hearts";
@@ -6,10 +8,8 @@ import { QuestionDisplay } from "../components/QuestionDisplay";
 import { GameControls } from "../components/GameControls";
 import { SolutionDisplay } from "../components/SolutionDisplay";
 import { mathQuestions } from "../data/questions";
-import { Calculator as Kalkulator } from "lucide-react";
-import { X } from "lucide-react";
-import { Toaster } from "sonner";
-import { toast } from "sonner";
+import "../styles/_home.scss";
+
 const initialGameState = {
   lives: 3,
   currentStep: 0,
@@ -20,6 +20,7 @@ const initialGameState = {
   roundStatus: "default",
   actionTaken: false,
   viewedSolutionSteps: [],
+  penaltySteps: [],
 };
 
 function Home() {
@@ -29,7 +30,6 @@ function Home() {
   const [showVideo, setShowVideo] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
-  
   const [videoStep, setVideoStep] = useState(null);
 
   const currentQuestion = mathQuestions[gameState.currentStep];
@@ -59,19 +59,13 @@ function Home() {
       handleCorrectAnswer();
       setIsAnswerCorrect(true);
       toast.success("To'g'ri javob!", {
-        style: {
-          backgroundColor: "green",
-          color: "white",
-        },
+        style: { backgroundColor: "green", color: "white" },
       });
     } else {
       handleWrongAnswer();
       setIsAnswerCorrect(false);
       toast.error("Noto'g'ri javob!", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
+        style: { backgroundColor: "red", color: "white" },
       });
     }
   };
@@ -82,20 +76,19 @@ function Home() {
 
     let heartsToAdd = 1;
 
+    if (gameState.hasViewedSolution || gameState.actionTaken) {
+      heartsToAdd = 0;
+    }
 
-  if (gameState.hasViewedSolution || gameState.actionTaken) {
-    heartsToAdd = 0;
-  }
-
-  setGameState((prev) => ({
-    ...prev,
-    lives: Math.min(prev.lives + heartsToAdd, 3),
-    currentStep: prev.currentStep + 1,
-    mistakes: 0,
-    roundStatus: "default",
-    isVideoRequired: false,
-    hasViewedSolution: false,
-    actionTaken: false,
+    setGameState((prev) => ({
+      ...prev,
+      lives: Math.min(prev.lives + heartsToAdd, 3),
+      currentStep: prev.currentStep + 1,
+      mistakes: 0,
+      roundStatus: "default",
+      isVideoRequired: false,
+      hasViewedSolution: false,
+      actionTaken: false,
     }));
   };
 
@@ -103,12 +96,19 @@ function Home() {
     if (gameState.mistakes === 0) {
       setGameState((prev) => ({ ...prev, mistakes: 1 }));
     } else {
+      const currentPenaltyStep = gameState.currentStep;
       setGameState((prev) => ({
         ...prev,
         lives: prev.lives - 1,
         strafQuestions:
           prev.lives === 1 ? prev.strafQuestions + 2 : prev.strafQuestions + 1,
         roundStatus: prev.lives === 1 ? "red" : prev.roundStatus,
+        penaltySteps: [
+          ...prev.penaltySteps,
+          ...Array.from({ length: prev.strafQuestions }).map(
+            (_, i) => currentPenaltyStep + i
+          ),
+        ],
         isVideoRequired: prev.lives === 1,
       }));
     }
@@ -130,13 +130,13 @@ function Home() {
 
   const handleVideoExplanation = () => {
     if (!gameState.actionTaken) {
-      setShowVideo(true); // Show video on button click
-      setVideoStep(gameState.currentStep); // Track the current step where video is viewed
+      setShowVideo(true);
+      setVideoStep(gameState.currentStep);
       if (gameState.lives > 0) {
         setGameState((prev) => ({
           ...prev,
           lives: prev.lives - 1,
-          roundStatus: "yellow", // Change round status to yellow after video
+          roundStatus: "yellow",
           hasViewedSolution: true,
           actionTaken: true,
         }));
@@ -144,117 +144,95 @@ function Home() {
     }
   };
 
-
   if (gameState.currentStep >= mathQuestions.length) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl shadow-xl p-8 text-center">
-          <h1 className="text-2xl font-bold mb-4">Congratulations! 🎉</h1>
-          <p className="text-gray-600">
-            You've completed all the math questions!
-          </p>
+      <div className="home">
+        <div className="completion-message">
+          <h1>Congratulations! 🎉</h1>
+          <p>You've completed all the math questions!</p>
         </div>
       </div>
     );
   }
 
-  const openModal = () => {
-    const modal = document.getElementById("my_modal_3");
-    modal?.showModal();
-  };
-
   return (
-    <div className="">
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-10">
-        <button className="btn " onClick={openModal}>
-          <p className="bg-black text-white px-3 py-3 rounded-xl">Modal</p>
-        </button>
-        <dialog id="my_modal_3" className="modal rounded-xl w-full max-w-5xl">
-          <div className="modal-box mt-5">
-            <Toaster position="top-center" />
-            <form method="dialog">
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-1 ">
-                <X />
-              </button>
-            </form>
-            <div className="bg-gray-100 flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl shadow-xl p-14 w-full max-w-2xl relative">
-                <Hearts lives={gameState.lives} />
-
-                <QuestionDisplay
-                  question={currentQuestion}
-                  roundStatus={gameState.roundStatus}
-                  onOptionSelect={handleOptionSelect}
-                  selectedOption={selectedOption}
-                />
-
-                {currentQuestion.type === "completion" && (
-                  <div className="mt-6">
-                    <div className="bg-gray-50 p-4 rounded-lg flex justify-center items-center mb-4">
-                      <p className="text-lg font-medium text-gray-700">
-                        Sizning javobingiz:
-                      </p>
-                      <input
-                        type="number"
-                        className="border-2 border-gray-300 rounded-lg p-2 mx-5 max-w-[70px]"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                      ></input>
-                      <Kalkulator className="text-gray-700" size={35} />
-                    </div>
-                    <Calculator onInput={handleInput} />
+    <div className="home">
+      <button
+        className="modal-button"
+        onClick={() => document.getElementById("my_modal_3")?.showModal()}
+      >
+        Modal
+      </button>
+      <dialog id="my_modal_3" className="modal">
+        <div className="modal-box">
+          <Toaster position="top-center" />
+          <form method="dialog">
+            <button className="close-button">
+              <X />
+            </button>
+          </form>
+          <div className="content">
+            <div className="card">
+              <Hearts lives={gameState.lives} />
+              <QuestionDisplay
+                question={currentQuestion}
+                roundStatus={gameState.roundStatus}
+                onOptionSelect={handleOptionSelect}
+                selectedOption={selectedOption}
+              />
+              {currentQuestion.type === "completion" && (
+                <div className="completion-input">
+                  <div className="input-container">
+                    <p>Sizning javobingiz:</p>
+                    <input
+                      type="number"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                    />
+                    <Kalkulator size={35} />
                   </div>
-                )}
-
-                <GameControls
-                  onCheck={handleCheck}
-                  onViewSolution={handleViewSolution}
-                  onVideoExplanation={handleVideoExplanation}
-                  isCheckDisabled={
-                    (gameState.isVideoRequired &&
-                      !gameState.hasViewedSolution) ||
-                    (currentQuestion.type === "completion" &&
-                      input.trim() === "")
-                  }
-                  showNext={showSolution}
-                  videoRequired={gameState.isVideoRequired}
-                  videoUrl={currentQuestion.videoUrl || ""}
-                  actionTaken={gameState.actionTaken}
-                  isAnswerCorrect={isAnswerCorrect}
-                />
-
-                {showVideo && currentQuestion.videoUrl && (
-                  <div className="mt-6 p-6 bg-gray-50 rounded-lg">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Video tushuntirish:
-                    </h3>
-                    <iframe
-                      src={currentQuestion.videoUrl}
-                      title="Video Explanation"
-                      className="w-full h-64 rounded-lg border"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                )}
-
-                <SolutionDisplay
-                  solution={currentQuestion.solution}
-                  isVisible={showSolution}
-                />
-
-                <StepTracker
-                  currentStep={gameState.currentStep}
-                  totalSteps={mathQuestions.length + gameState.strafQuestions}
-                  roundStatus={gameState.roundStatus}
-                  viewedSolutionSteps={gameState.viewedSolutionSteps}
-                  lives={gameState.lives}
-                  videoStep={videoStep}
-                />
-              </div>
+                  <Calculator onInput={handleInput} />
+                </div>
+              )}
+              <GameControls
+                onCheck={handleCheck}
+                onViewSolution={handleViewSolution}
+                onVideoExplanation={handleVideoExplanation}
+                isCheckDisabled={
+                  (gameState.isVideoRequired && !gameState.hasViewedSolution) ||
+                  (currentQuestion.type === "completion" && input.trim() === "")
+                }
+                showNext={showSolution}
+                videoUrl={currentQuestion.videoUrl || ""}
+                actionTaken={gameState.actionTaken}
+                currentQuestionId={currentQuestion.id}
+              />
+              {showVideo && currentQuestion.videoUrl && (
+                <div className="video-container">
+                  <h3>Video tushuntirish:</h3>
+                  <iframe
+                    src={currentQuestion.videoUrl}
+                    title="Video Explanation"
+                    allowFullScreen
+                  />
+                </div>
+              )}
+              <SolutionDisplay
+                solution={currentQuestion.solution}
+                isVisible={showSolution}
+              />
+              <StepTracker
+                currentStep={gameState.currentStep}
+                totalSteps={mathQuestions.length + gameState.strafQuestions}
+                roundStatus={gameState.roundStatus}
+                viewedSolutionSteps={gameState.viewedSolutionSteps}
+                videoStep={videoStep}
+                penaltySteps={gameState.penaltySteps}
+              />
             </div>
           </div>
-        </dialog>
-      </div>
+        </div>
+      </dialog>
     </div>
   );
 }

@@ -1,25 +1,28 @@
+import React from "react";
+
+import "../styles/_step-tracker.scss";
+
 export function StepTracker({
   currentStep,
   totalSteps,
-  roundStatus,
   viewedSolutionSteps,
-  videoStep, // Track the step where video was viewed
+  videoStep,
 }) {
   return (
-    <div className="flex justify-center mt-10">
+    <div className="step-tracker">
       {[...Array(totalSteps)].map((_, index) => (
         <div
           key={index}
-          className={`w-4 h-4 rounded-full mx-1 ${
+          className={`step ${
             videoStep === index
-              ? "bg-yellow-500"
+              ? "step--video"
               : viewedSolutionSteps.includes(index)
-              ? "bg-red-700"
+              ? "step--viewed"
               : index < currentStep
-              ? "bg-green-500"
-              : "bg-gray-300"
+              ? "step--completed"
+              : "step--default"
           }`}
-        ></div>
+        />
       ))}
     </div>
   );

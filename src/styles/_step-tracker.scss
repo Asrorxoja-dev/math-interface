@@ -1,0 +1,28 @@
+.step-tracker {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem 0;
+  
+    .step {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 9999px;
+      margin: 0 0.25rem;
+  
+      &--video {
+        background-color: #eab308;
+      }
+  
+      &--viewed {
+        background-color: #b91c1c;
+      }
+  
+      &--completed {
+        background-color: #22c55e;
+      }
+  
+      &--default {
+        background-color: #d1d5db;
+      }
+    }
+  }
